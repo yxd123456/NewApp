@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import asus.newapp.R;
+import asus.newapp.annotation.ViewInject;
+import asus.newapp.annotation.ViewInjectUtil;
 import asus.newapp.fragment.DetailFragment;
 import asus.newapp.fragment.MainFragment;
 import asus.newapp.fragment.SecondFragment;
 import asus.newapp.fragment.ThirdFragment;
 import asus.newapp.utils.CommonUtils;
 import asus.newapp.utils.FragmentUtils;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * 托管所有Fragment的Activity，程序的入口
@@ -32,15 +32,16 @@ public class MainActivity extends CommonUtils {
     public DetailFragment df;
     public FragmentUtils fragmentUtils;
 
-    @InjectView(R.id.rg_bottom)
-    public RadioGroup rgBottom;//底部切换栏
     //收藏所有Fragment的集合
     public List<Fragment> fragments = new ArrayList<>();
+    @ViewInject(value = R.id.rg_bottom)
+    public RadioGroup rgBottom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ViewInjectUtil.inject(this);
         init();
     }
 
@@ -48,9 +49,11 @@ public class MainActivity extends CommonUtils {
     public void rb1(View v) {
         fragmentUtils.switchFragment(mf);
     }
+
     public void rb2(View v) {
         fragmentUtils.switchFragment(sf);
     }
+
     public void rb3(View v) {
         fragmentUtils.switchFragment(tf);
     }
@@ -59,16 +62,21 @@ public class MainActivity extends CommonUtils {
     public void onBackPressed() {
         super.onBackPressed();
         getSupportFragmentManager().popBackStack();//将最上层Fragment弹出回退栈
-        switch (BACKFLAG){//根据回退标志来决定返回到哪个Fragment
-            case 1:fragmentUtils.switchFragment(mf);break;
-            case 2:fragmentUtils.switchFragment(sf);break;
-            case 3:fragmentUtils.switchFragment(tf);break;
+        switch (BACKFLAG) {//根据回退标志来决定返回到哪个Fragment
+            case 1:
+                fragmentUtils.switchFragment(mf);
+                break;
+            case 2:
+                fragmentUtils.switchFragment(sf);
+                break;
+            case 3:
+                fragmentUtils.switchFragment(tf);
+                break;
         }
         invertVisible(rgBottom);//重新显示底部切换栏
     }
 
     private void init() {
-        ButterKnife.inject(this);
         mf = new MainFragment();
         sf = new SecondFragment();
         tf = new ThirdFragment();
